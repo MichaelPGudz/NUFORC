@@ -129,3 +129,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# PROJECT-SPECIFIC IGNORES
+# Ignored filetypes
+
+# Ignored directories
+incoming/
+data/
