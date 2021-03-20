@@ -132,6 +132,10 @@ dmypy.json
 
 # PROJECT-SPECIFIC IGNORES
 # Ignored filetypes
+.ipynb
+
+# Ignored files
+google_api_key.txt
 
 # Ignored directories
 incoming/
