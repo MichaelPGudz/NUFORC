@@ -11,6 +11,7 @@ handlers:
         formatter: simple
         stream: ext://sys.stdout
 
+
 loggers:
    model.modules.scraping:
         level: INFO
