@@ -43,7 +43,7 @@ def main():
         events = scrape_monthly_event_page(url)
         all_events.update(events)
 
-    pd.DataFrame(all_events).T.to_csv("data/raw_nuforc_test.csv")
+    pd.DataFrame(all_events).T.to_csv("data/raw_nuforc.csv")
     logger.info(f"Scraping finished.\nDuration: {datetime.now() - start_time}")
 
 if __name__ == "__main__":

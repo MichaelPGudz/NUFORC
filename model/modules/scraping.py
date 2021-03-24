@@ -55,19 +55,24 @@ def scrape_monthly_event_page(url):
             )
 
     # Cast event summaries to a dictionary, with event subpage link as key and event summary as value.
-    event_summaries = dict([future.result() for future in futures])
+    event_summaries = {}
+    for future in futures:
+        event_summaries[future.result()[0]] = future.result()[1]
 
     """
     Create a nested, final dictionary, where:
     - keys are event subpages
     - values are dictionaries with basic info extracted from monthly page
     - 'summary' key value in the nested dictionary is replaced with full summary taken from event subpage
-     (see event_summaries above)
+     (see event_summaries above).
+     - .get(event, events[event]['summary']) is used to avoid a situation where an event is described on
+     the monthly page, but the event subpage returned 404 (rare, but possible). In that case, shortened
+     summary from monthly page is retained.
     """
     events = dict.fromkeys(event_subpages)
     for i, event in enumerate(events):
         events[event] = dict(zip(keys, event_tags[i].text.split("\n")[1:-1]))
-        events[event]["summary"] = event_summaries[event]
+        events[event]['summary'] = event_summaries.get(event, events[event]['summary'])
 
     logger.info(f"scraping finished in {datetime.now() - start_time}")
 
