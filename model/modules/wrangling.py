@@ -106,6 +106,15 @@ def extract_country(location, state=None):
 
 
 def search_country_name(name, lookup=non_iso_3166_country_names):
+    """
+
+    Args:
+        name:
+        lookup:
+
+    Returns:
+
+    """
     if not isinstance(name, str):
         return None
     try:

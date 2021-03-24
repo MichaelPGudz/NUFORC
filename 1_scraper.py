@@ -21,7 +21,7 @@ logger = logging.getLogger("scraper")
 def main():
     logger.info("Scraping started.")
     monthly_event_pages = get_monthly_event_pages()
-    all_events = []
+    all_events = {}
 
     logger.info(f"Checking directory structure...")
     if not Path("data").exists():
@@ -34,19 +34,17 @@ def main():
             )
             traceback.print_exc()
             sys.exit(1)
+    else:
+        logger.info("Directory structure in place.")
 
     start_time = datetime.now()
     for i, url in enumerate(monthly_event_pages):
-        logger.info(f"Scraping URL {i+1}/{len(monthly_event_pages)}: {url}")
-        monthly_event_list = scrape_monthly_event_page(url)
-        all_events.extend(monthly_event_list)
-        time.sleep(random.randint(5, 10))
-    end_time = datetime.now()
-    logger.info(f"Duration: {end_time - start_time}")
+        logger.info(f"{i+1}/{len(monthly_event_pages)} - scraping monthly page @ {url}")
+        events = scrape_monthly_event_page(url)
+        all_events.update(events)
 
-    pd.DataFrame(all_events).to_csv("data/raw_nuforc.csv", index=False)
-    logger.info("Scraping finished.")
-
+    pd.DataFrame(all_events).T.to_csv("data/raw_nuforc_test.csv")
+    logger.info(f"Scraping finished.\nDuration: {datetime.now() - start_time}")
 
 if __name__ == "__main__":
     main()
