@@ -46,5 +46,6 @@ def main():
     pd.DataFrame(all_events).T.to_csv("data/raw_nuforc.csv")
     logger.info(f"Scraping finished.\nDuration: {datetime.now() - start_time}")
 
+
 if __name__ == "__main__":
     main()

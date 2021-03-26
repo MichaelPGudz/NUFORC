@@ -42,7 +42,6 @@ def scrape_monthly_event_page(url):
         for tag in event_subpages_tags
     ]
 
-
     # XXX: Utilize 'ThreadPoolExecutor' utility to request event summaries in a multi-threaded approach.
     # This has proved to be much, much faster than requesting event summaries one by one.
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -72,7 +71,7 @@ def scrape_monthly_event_page(url):
     events = dict.fromkeys(event_subpages)
     for i, event in enumerate(events):
         events[event] = dict(zip(keys, event_tags[i].text.split("\n")[1:-1]))
-        events[event]['summary'] = event_summaries.get(event, events[event]['summary'])
+        events[event]["summary"] = event_summaries.get(event, events[event]["summary"])
 
     logger.info(f"scraping finished in {datetime.now() - start_time}")
 
@@ -80,15 +79,19 @@ def scrape_monthly_event_page(url):
 
 
 def get_event_summary(event_page, return_event_page=False):
-    page = requests.get(event_page)
-    soup = BeautifulSoup(page.text, "html.parser")
     try:
+        page = requests.get(event_page, timeout=0.5)
+    except Exception as e:
+        return f"Unable to get event page: {e}"
+
+    try:
+        soup = BeautifulSoup(page.text, "html.parser")
         tags = soup.find_all("tr")
         summary = str(tags[2].text.split("\n")[1])
     except:
-        return "Unable to get summary"
+        return "Unable to extract summary"
 
     if return_event_page:
-        return (event_page, summary)
+        return event_page, summary
 
     return summary
